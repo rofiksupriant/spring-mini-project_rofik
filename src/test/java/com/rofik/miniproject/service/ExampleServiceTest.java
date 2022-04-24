@@ -16,16 +16,16 @@ class ExampleServiceTest {
 
     @Test
     void greeting_Test() {
-        ResponseEntity<Object> responseEntity = exampleService.greeting();
+        ResponseEntity<Object> responseEntity = exampleService.helloWorld();
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
 
         assertEquals(HttpStatus.OK, apiResponse.getStatus());
-        assertEquals("Hello World!", apiResponse.getMessage());
+        assertEquals("Hello World!", apiResponse.getData());
     }
 
     @Test
     void greetingNameSuccess_Test() {
-        ResponseEntity<Object> responseEntity = exampleService.greetingName("Jhon Doe");
+        ResponseEntity<Object> responseEntity = exampleService.greeting("Jhon Doe");
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
 
         assertEquals(HttpStatus.OK, apiResponse.getStatus());
@@ -34,7 +34,7 @@ class ExampleServiceTest {
 
     @Test
     void greetingNameNull_Test() {
-        ResponseEntity<Object> responseEntity = exampleService.greetingName(null);
+        ResponseEntity<Object> responseEntity = exampleService.greeting(null);
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
 
         assertEquals(HttpStatus.OK, apiResponse.getStatus());
@@ -43,7 +43,7 @@ class ExampleServiceTest {
 
     @Test
     void greetingNameEmpty_Test() {
-        ResponseEntity<Object> responseEntity = exampleService.greetingName(" ");
+        ResponseEntity<Object> responseEntity = exampleService.greeting(" ");
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
 
         assertEquals(HttpStatus.OK, apiResponse.getStatus());

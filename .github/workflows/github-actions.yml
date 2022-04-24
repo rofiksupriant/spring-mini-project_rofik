@@ -70,7 +70,7 @@ jobs:
           port: 22
           username: ${{ secrets.EC2_SSH_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: .env.dev
+          source: .dev.env
           target: /home/${{ secrets.EC2_SSH_USERNAME }}
       - name: Deploy using ssh
         uses: appleboy/ssh-action@master
