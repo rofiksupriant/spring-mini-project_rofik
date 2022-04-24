@@ -1,5 +1,5 @@
 # Import base JDK from Linux
-FROM adoptopenjdk/openjdk17:alpine
+FROM adoptopenjdk/openjdk11:alpine
 
 # Set work directory
 WORKDIR /app
