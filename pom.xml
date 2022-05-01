@@ -20,19 +20,26 @@
     </properties>
 
     <dependencies>
-        <!--		<dependency>-->
-        <!--			<groupId>org.springframework.boot</groupId>-->
-        <!--			<artifactId>spring-boot-starter-security</artifactId>-->
-        <!--		</dependency>-->
+        <!-- security :START -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+        <!-- security :END -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>org.springframework.boot</groupId>-->
-<!--                    <artifactId>spring-boot-starter-logging</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
+            <!--            <exclusions>-->
+            <!--                <exclusion>-->
+            <!--                    <groupId>org.springframework.boot</groupId>-->
+            <!--                    <artifactId>spring-boot-starter-logging</artifactId>-->
+            <!--                </exclusion>-->
+            <!--            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -52,6 +59,11 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>8.5.10</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -140,8 +152,10 @@
                         <exclude>**/constan/*.class</exclude>
                         <exclude>**/repository/*.class</exclude>
                         <exclude>**/domain/**/*.class</exclude>
+                        <exclude>**/controller/*.class</exclude>
                         <exclude>**/controller/**/*.class</exclude>
                         <exclude>**/exception/*.class</exclude>
+                        <exclude>**/security/**Config.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -160,6 +174,19 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>8.5.10</version>
+                <configuration>
+                    <url>jdbc:postgresql://localhost:5432/mini_project</url>
+                    <user>postgres</user>
+                    <password>12345</password>
+                    <schemas>
+                        <schema>public</schema>
+                    </schemas>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
