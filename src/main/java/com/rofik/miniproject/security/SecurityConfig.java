@@ -55,10 +55,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
-                .antMatchers("v1/customer/**").permitAll()
                 .antMatchers("swagger-ui/**").permitAll()
-                .antMatchers("v1/employee").hasAnyRole(UserRole.ADMIN.name(), UserRole.EMPLOYEE.name())
-                .antMatchers("v1/admin").hasRole(UserRole.ADMIN.name())
+                .antMatchers("v1/customer/**").hasRole(UserRole.CUSTOMER.name())
+                .antMatchers("v1/employee/**").hasRole(UserRole.EMPLOYEE.name())
+                .antMatchers("v1/admin/**").hasRole(UserRole.ADMIN.name())
                 .anyRequest().authenticated()
 
                 .and()
