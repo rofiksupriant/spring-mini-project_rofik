@@ -6,6 +6,7 @@ import com.rofik.miniproject.domain.dto.response.TableResponse;
 import com.rofik.miniproject.repository.TableRepository;
 import com.rofik.miniproject.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,9 @@ public class TableService {
             table.setNumber(request.getNumber());
             table = tableRepository.saveAndFlush(table);
 
-            return ResponseUtil.build("table created successfully", HttpStatus.OK, table);
+            TableResponse response = new TableResponse();
+            BeanUtils.copyProperties(table, response);
+            return ResponseUtil.build("table created successfully", HttpStatus.OK, response);
         } catch (Exception e) {
             log.error("Error create new table: {}", e.getLocalizedMessage());
             throw e;
@@ -66,7 +69,10 @@ public class TableService {
             if (tableOptional.isEmpty()) return ResponseUtil.build("data not found", HttpStatus.NOT_FOUND);
 
             Table table = tableOptional.get();
-            return ResponseUtil.build("table by id", HttpStatus.OK, table);
+            TableResponse response = new TableResponse();
+            BeanUtils.copyProperties(table, response);
+
+            return ResponseUtil.build("table by id", HttpStatus.OK, response);
         } catch (Exception e) {
             log.error("Error get table by id: {}", e.getLocalizedMessage());
             throw e;
@@ -80,7 +86,9 @@ public class TableService {
             if (tableOptional.isEmpty()) return ResponseUtil.build("data not found", HttpStatus.NOT_FOUND);
 
             Table table = tableOptional.get();
-            return ResponseUtil.build("table by id", HttpStatus.OK, table);
+            TableResponse response = new TableResponse();
+            BeanUtils.copyProperties(table, response);
+            return ResponseUtil.build("table by id", HttpStatus.OK, response);
         } catch (Exception e) {
             log.error("Error get table by id: {}", e.getLocalizedMessage());
             throw e;
@@ -102,9 +110,11 @@ public class TableService {
             table.setNumber(request.getNumber());
             table = tableRepository.saveAndFlush(table);
 
-            return ResponseUtil.build("table updatedd successfully", HttpStatus.OK, table);
+            TableResponse response = new TableResponse();
+            BeanUtils.copyProperties(table, response);
+            return ResponseUtil.build("table updatedd successfully", HttpStatus.OK, response);
         } catch (Exception e) {
-            log.error("Error update table: {}", e.getLocalizedMessage());
+            log.error("Error update table with id {}: {}", id, e.getLocalizedMessage());
             throw e;
         }
     }
@@ -119,7 +129,7 @@ public class TableService {
             tableRepository.deleteById(id);
             return ResponseUtil.build("table deleted successfully", HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Error delete table with id {}", id);
+            log.error("Error delete table with id {}: {}", id, e.getLocalizedMessage());
             throw e;
         }
 
