@@ -31,7 +31,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true)
     private String email;
 
     @Enumerated
@@ -39,7 +39,7 @@ public class User {
     private UserRole role;
 
     @Column(name = "active", nullable = false, columnDefinition = "BOOLEAN default TRUE")
-    private Boolean active;
+    private Boolean active = true;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
