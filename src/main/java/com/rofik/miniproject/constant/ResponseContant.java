@@ -22,5 +22,12 @@ public class ResponseContant {
     public static final String CATEGORY_DELETED = "category deleted successfully";
     public static final String CATEGORY_GET_ALL = "list category";
     public static final String CATEGORY_GET_BY_ID = "category by id";
+    public static final String PAYMENT_EXIST = "payment name already exist";
+    public static final String PAYMENT_NOT_FOUND = "payment not found";
+    public static final String PAYMENT_CREATED = "payment created successfully";
+    public static final String PAYMENT_UPDATED = "payment updated successfully";
+    public static final String PAYMENT_DELETED = "payment deleted successfully";
+    public static final String PAYMENT_GET_ALL = "list payment";
+    public static final String PAYMENT_GET_BY_ID = "payment by id";
 
 }
