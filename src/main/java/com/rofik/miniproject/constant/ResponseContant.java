@@ -29,5 +29,19 @@ public class ResponseContant {
     public static final String PAYMENT_DELETED = "payment deleted successfully";
     public static final String PAYMENT_GET_ALL = "list payment";
     public static final String PAYMENT_GET_BY_ID = "payment by id";
+    public static final String PRODUCT_NOT_FOUND = "product not found";
+    public static final String PRODUCT_CREATED = "product created successfully";
+    public static final String PRODUCT_UPDATED = "product updated successfully";
+    public static final String PRODUCT_DELETED = "product deleted successfully";
+    public static final String PRODUCT_GET_ALL = "list product";
+    public static final String PRODUCT_GET_ALL_DELETED = "list product deleted";
+    public static final String PRODUCT_GET_BY_ID = "product by id";
+    public static final String PRODUCT_CATEGORY_NOT_FOUND = "product category not found";
+    public static final String PRODUCT_CATEGORY_EXIST = "product category already exist";
+    public static final String PRODUCT_CATEGORY_CREATED = "product category created successfully";
+    public static final String PRODUCT_CATEGORY_UPDATED = "product category updated successfully";
+    public static final String PRODUCT_CATEGORY_DELETED = "product category deleted successfully";
+    public static final String PRODUCT_CATEGORY_GET_ALL = "list product category";
+    public static final String PRODUCT_CATEGORY_GET_BY_ID = "product category by id";
 
 }
