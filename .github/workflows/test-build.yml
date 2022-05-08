@@ -1,9 +1,9 @@
-name: Spring Boot Mini Project
+name: Test & Build
 
 on:
   push:
-    branches:
-      - !development
+    branches-ignore:
+      - development
 
 jobs:
   run_test:
