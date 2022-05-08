@@ -1,4 +1,4 @@
-name: Spring Boot Mini Project
+name: Deploy to AWS
 
 on:
   push:
