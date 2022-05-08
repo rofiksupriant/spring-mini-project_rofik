@@ -162,7 +162,7 @@ class ProductCategoryCategoryServiceTest {
         when(productCategoryRepository.findById(anyLong())).thenReturn(Optional.of(productCategory));
         when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
         when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
-        when(productCategoryRepository.findByProductAndCategory(any(), any())).thenReturn(Optional.ofNullable(productCategory));
+        when(productCategoryRepository.findByProductAndCategoryAndIdNot(any(), any(), anyLong())).thenReturn(Optional.ofNullable(productCategory));
         when(productCategoryRepository.saveAndFlush(any())).thenReturn(productCategory);
 
         ProductCategoryRequest productCategoryRequest = new ProductCategoryRequest();
