@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "v1")
+@RequestMapping(value = "v1/example")
 public class ExampleController {
     @Autowired
     private ExampleService exampleService;
