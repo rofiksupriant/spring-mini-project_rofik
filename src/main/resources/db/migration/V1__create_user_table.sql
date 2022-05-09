@@ -16,5 +16,5 @@ ALTER TABLE users ADD CONSTRAINT uc_users_email UNIQUE (email);
 ALTER TABLE users ADD CONSTRAINT uc_users_username UNIQUE (username);
 
 INSERT INTO users(name, username, password, role) VALUES
-('Administrator', 'admin', '$2a$12$6tCUFEczTC/O0x9dMGkV3unOAgutEuk.uXqbcTL9bllOJrkzPYMYS', 1),
-('Employee', 'employee', '$2a$12$6tCUFEczTC/O0x9dMGkV3unOAgutEuk.uXqbcTL9bllOJrkzPYMYS', 2);
+('Administrator', 'admin', '$2a$12$6tCUFEczTC/O0x9dMGkV3unOAgutEuk.uXqbcTL9bllOJrkzPYMYS', 0),
+('Employee', 'employee', '$2a$12$6tCUFEczTC/O0x9dMGkV3unOAgutEuk.uXqbcTL9bllOJrkzPYMYS', 1);
