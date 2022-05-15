@@ -36,12 +36,14 @@ public class ProductService {
     @Transactional
     public ResponseEntity<Object> createOne(ProductRequest request) {
         try {
-            String fileName = StringUtils.cleanPath(Objects.requireNonNull(request.getPicture().getOriginalFilename()));
-            String filePath = FileUploadUtil.saveFile("products", fileName, request.getPicture());
 
             Product product = new Product();
             BeanUtils.copyProperties(request, product);
-            product.setPicture(filePath);
+            if (request.getPicture() != null) {
+                String fileName = StringUtils.cleanPath(Objects.requireNonNull(request.getPicture().getOriginalFilename()));
+                String filePath = FileUploadUtil.saveFile("products", fileName, request.getPicture());
+                product.setPicture(filePath);
+            }
             product = productRepository.saveAndFlush(product);
 
             ProductResponse response = new ProductResponse();
@@ -60,11 +62,13 @@ public class ProductService {
 
             List<ProductResponse> result = new ArrayList<>();
             productList.forEach(product -> {
-                Resource fileAsResource;
-                try {
-                    fileAsResource = FileDownloadUtil.getFileAsResource(product.getPicture());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                Resource fileAsResource = null;
+                if (product.getPicture() != null) {
+                    try {
+                        fileAsResource = FileDownloadUtil.getFileAsResource(product.getPicture());
+                    } catch (IOException e) {
+                        log.error("error load image file: {}", e.getLocalizedMessage());
+                    }
                 }
                 result.add(
                         ProductResponse.builder()
@@ -87,16 +91,18 @@ public class ProductService {
 
     public ResponseEntity<Object> getAllDeleted() {
         try {
-            log.info("Get all product");
+            log.info("Get all deleted product");
             List<Product> productList = productRepository.findByDeleted(true);
 
             List<ProductResponse> result = new ArrayList<>();
             productList.forEach(product -> {
-                Resource fileAsResource;
-                try {
-                    fileAsResource = FileDownloadUtil.getFileAsResource(product.getPicture());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                Resource fileAsResource = null;
+                if (product.getPicture() != null) {
+                    try {
+                        fileAsResource = FileDownloadUtil.getFileAsResource(product.getPicture());
+                    } catch (IOException e) {
+                        log.error("error load image file: {}", e.getLocalizedMessage());
+                    }
                 }
                 result.add(
                         ProductResponse.builder()
@@ -112,7 +118,7 @@ public class ProductService {
 
             return ResponseUtil.build(PRODUCT_GET_ALL_DELETED, HttpStatus.OK, result);
         } catch (Exception e) {
-            log.error("Error get all product: {}", e.getLocalizedMessage());
+            log.error("Error get all deleted product: {}", e.getLocalizedMessage());
             throw e;
         }
     }
@@ -124,11 +130,13 @@ public class ProductService {
             if (productOptional.isEmpty()) return ResponseUtil.build(PRODUCT_NOT_FOUND, HttpStatus.NOT_FOUND);
 
             Product product = productOptional.get();
-            Resource fileAsResource;
-            try {
-                fileAsResource = FileDownloadUtil.getFileAsResource(product.getPicture());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            Resource fileAsResource = null;
+            if (product.getPicture() != null) {
+                try {
+                    fileAsResource = FileDownloadUtil.getFileAsResource(product.getPicture());
+                } catch (IOException e) {
+                    log.error("error load image file: {}", e.getLocalizedMessage());
+                }
             }
             ProductResponse response = ProductResponse.builder()
                     .id(product.getId())
@@ -146,6 +154,7 @@ public class ProductService {
         }
     }
 
+    @SneakyThrows
     public ResponseEntity<Object> updateOne(Long id, ProductRequest request) {
         try {
             log.info("Update product {}", id);
@@ -153,9 +162,13 @@ public class ProductService {
             Optional<Product> productOptional = productRepository.findById(id);
             if (productOptional.isEmpty()) return ResponseUtil.build(PRODUCT_NOT_FOUND, HttpStatus.NOT_FOUND);
 
-
             Product product = productOptional.get();
             BeanUtils.copyProperties(request, product);
+            if (request.getPicture() != null) {
+                String fileName = StringUtils.cleanPath(Objects.requireNonNull(request.getPicture().getOriginalFilename()));
+                String filePath = FileUploadUtil.saveFile("products", fileName, request.getPicture());
+                product.setPicture(filePath);
+            }
             product = productRepository.saveAndFlush(product);
 
             ProductResponse response = new ProductResponse();

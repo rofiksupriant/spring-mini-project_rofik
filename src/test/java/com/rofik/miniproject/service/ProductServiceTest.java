@@ -5,13 +5,16 @@ import com.rofik.miniproject.domain.dao.Product;
 import com.rofik.miniproject.domain.dto.request.ProductRequest;
 import com.rofik.miniproject.domain.dto.response.ProductResponse;
 import com.rofik.miniproject.repository.ProductRepository;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -29,12 +32,17 @@ class ProductServiceTest {
     @InjectMocks
     private ProductService productService;
 
+    @SneakyThrows
     @Test
     void createOneSuccess() {
+        final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("test.jpg");
+        final MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpg", inputStream);
+
         Product product = Product.builder().id(1L).name("ANY").deleted(false).build();
         when(productRepository.saveAndFlush(any())).thenReturn(product);
 
         ProductRequest productRequest = new ProductRequest();
+        productRequest.setPicture(file);
         ResponseEntity responseEntity = productService.createOne(productRequest);
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
         ProductResponse data = (ProductResponse) apiResponse.getData();
