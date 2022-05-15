@@ -2,10 +2,12 @@ package com.rofik.miniproject.domain.dto.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.data.annotation.Transient;
+
+import java.util.Base64;
 
 @Data
 @Builder
@@ -25,5 +27,17 @@ public class ProductResponse {
 
     private Integer price;
 
-    private String picture;
+    @Getter(AccessLevel.NONE)
+    private Resource picture;
+
+    @Transient
+    @SneakyThrows
+    public String getPicture() {
+        if (this.picture.exists()) {
+            byte[] fileContent = FileUtils.readFileToByteArray(this.picture.getFile());
+            return Base64.getEncoder().encodeToString(fileContent);
+        }
+
+        return null;
+    }
 }
