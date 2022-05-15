@@ -35,14 +35,10 @@ class ProductServiceTest {
     @SneakyThrows
     @Test
     void createOneSuccess() {
-        final InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("test.jpg");
-        final MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpg", inputStream);
-
         Product product = Product.builder().id(1L).name("ANY").deleted(false).build();
         when(productRepository.saveAndFlush(any())).thenReturn(product);
 
         ProductRequest productRequest = new ProductRequest();
-        productRequest.setPicture(file);
         ResponseEntity responseEntity = productService.createOne(productRequest);
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
         ProductResponse data = (ProductResponse) apiResponse.getData();
