@@ -33,7 +33,7 @@ public class ProductResponse {
     @Transient
     @SneakyThrows
     public String getPicture() {
-        if (this.picture.exists()) {
+        if (this.picture != null && this.picture.exists()) {
             byte[] fileContent = FileUtils.readFileToByteArray(this.picture.getFile());
             return Base64.getEncoder().encodeToString(fileContent);
         }
