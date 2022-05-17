@@ -14,7 +14,7 @@ public class CustomerProductController {
 
     @GetMapping
     public ResponseEntity<Object> getAll() {
-        return productService.getAll();
+        return productService.getAll(false);
     }
 
     @GetMapping(value = "{id}")
