@@ -65,7 +65,7 @@ public class OrderService {
                 orderDetailList.add(OrderDetail.builder()
                         .order(order)
                         .product(product)
-                        .image(product.getPicture())
+                        .image(product.getImage())
                         .price(product.getPrice())
                         .quantity(productOrderRequest.getQuantity())
                         .build());
