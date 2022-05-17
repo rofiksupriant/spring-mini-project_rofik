@@ -5,7 +5,7 @@ CREATE TABLE products (
    volume INTEGER,
    weight INTEGER,
    price INTEGER NOT NULL,
-   picture VARCHAR(255),
+   image VARCHAR(255),
    deleted BOOLEAN DEFAULT FALSE,
    created_at TIMESTAMP WITHOUT TIME ZONE,
    updated_at TIMESTAMP WITHOUT TIME ZONE,
