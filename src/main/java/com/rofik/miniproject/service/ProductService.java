@@ -51,9 +51,9 @@ public class ProductService {
             product = productRepository.saveAndFlush(product);
 
             Resource fileAsResource = null;
-            if (product.getPicture() != null) {
+            if (product.getImage() != null) {
                 try {
-                    fileAsResource = FileDownloadUtil.getFileAsResource(product.getPicture());
+                    fileAsResource = FileDownloadUtil.getFileAsResource(product.getImage());
                 } catch (IOException e) {
                     log.error("error load image file: {}", e.getLocalizedMessage());
                 }
@@ -61,7 +61,7 @@ public class ProductService {
 
             ProductResponse response = new ProductResponse();
             BeanUtils.copyProperties(product, response);
-            response.setPicture(fileAsResource);
+            response.setImage(fileAsResource);
 
             return ResponseUtil.build(PRODUCT_CREATED, HttpStatus.OK, response);
         } catch (Exception e) {
