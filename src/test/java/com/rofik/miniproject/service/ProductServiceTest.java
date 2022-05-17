@@ -9,7 +9,9 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -24,10 +26,10 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class ProductServiceTest {
-    @Mock
+    @MockBean
     private ProductRepository productRepository;
 
-    @InjectMocks
+    @Autowired
     private ProductService productService;
 
     @SneakyThrows
@@ -74,7 +76,7 @@ class ProductServiceTest {
                 Product.builder().id(4L).name("ANY4").deleted(true).build(),
                 Product.builder().id(5L).name("ANY5").deleted(true).build()
         );
-        when(productRepository.findByDeleted(anyBoolean())).thenReturn(productList);
+        when(productRepository.findAll()).thenReturn(productList);
 
         ResponseEntity responseEntity = productService.getAll(true);
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
