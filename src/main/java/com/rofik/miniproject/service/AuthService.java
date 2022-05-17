@@ -37,10 +37,11 @@ public class AuthService {
             } else {
                 username = loginRequest.getUsername();
                 password = loginRequest.getPassword();
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             }
 
             UserDetails userDetails = userDetailService.loadUserByUsername(username);
+            if (!password.isBlank())
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             String token = tokenProvider.generateToken(userDetails);
 
             LoginResponse response = LoginResponse.builder()
