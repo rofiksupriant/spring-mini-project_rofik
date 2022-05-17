@@ -29,7 +29,7 @@ public class FileUploadUtil {
             Path filePath = Paths.get(directory).resolve(fileCode + "-" + fileName);
             Path fullFilePath = basePath.resolve(filePath);
             Files.copy(inputStream, fullFilePath, StandardCopyOption.REPLACE_EXISTING);
-            return filePath.toUri().toString();
+            return filePath.toString();
         } catch (IOException ioe) {
             throw new IOException("Could not save file: " + fileName, ioe);
         }

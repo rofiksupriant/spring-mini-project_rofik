@@ -41,7 +41,6 @@ public class ProductService {
     @Transactional
     public ResponseEntity<Object> createOne(ProductRequest request) {
         try {
-
             Product product = new Product();
             BeanUtils.copyProperties(request, product);
             if (request.getImage() != null) {
@@ -51,8 +50,19 @@ public class ProductService {
             }
             product = productRepository.saveAndFlush(product);
 
+            Resource fileAsResource = null;
+            if (product.getPicture() != null) {
+                try {
+                    fileAsResource = FileDownloadUtil.getFileAsResource(product.getPicture());
+                } catch (IOException e) {
+                    log.error("error load image file: {}", e.getLocalizedMessage());
+                }
+            }
+
             ProductResponse response = new ProductResponse();
             BeanUtils.copyProperties(product, response);
+            response.setPicture(fileAsResource);
+
             return ResponseUtil.build(PRODUCT_CREATED, HttpStatus.OK, response);
         } catch (Exception e) {
             log.error("Error create new product: {}", e.getLocalizedMessage());
