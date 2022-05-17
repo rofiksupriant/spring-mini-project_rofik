@@ -54,11 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .antMatchers("swagger-ui/**").permitAll()
-                .antMatchers("v1/customer/**").hasRole(UserRole.CUSTOMER.name())
-                .antMatchers("v1/employee/**").hasRole(UserRole.EMPLOYEE.name())
-                .antMatchers("v1/admin/**").hasRole(UserRole.ADMIN.name())
+                .antMatchers("/v2/api-docs/**", "/configuration/**", "/swagger*/**", "/webjars/**", "/swagger-ui/**", "/v1/auth/**").permitAll()
+                .antMatchers("/v1/customer/**").hasRole(UserRole.CUSTOMER.name())
+                .antMatchers("/v1/employee/**").hasRole(UserRole.EMPLOYEE.name())
+                .antMatchers("/v1/admin/**").hasRole(UserRole.ADMIN.name())
                 .anyRequest().authenticated()
 
                 .and()
