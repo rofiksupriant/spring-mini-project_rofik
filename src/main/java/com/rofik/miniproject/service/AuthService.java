@@ -30,8 +30,17 @@ public class AuthService {
 
     public ResponseEntity<Object> login(LoginRequest loginRequest) {
         try {
-            UserDetails userDetails = userDetailService.loadUserByUsername(loginRequest.getUsername());
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            var username = "";
+            var password = "";
+            if (loginRequest.getTableUuid() != null) {
+                username = loginRequest.getTableUuid();
+            } else {
+                username = loginRequest.getUsername();
+                password = loginRequest.getPassword();
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            }
+
+            UserDetails userDetails = userDetailService.loadUserByUsername(username);
             String token = tokenProvider.generateToken(userDetails);
 
             LoginResponse response = LoginResponse.builder()
