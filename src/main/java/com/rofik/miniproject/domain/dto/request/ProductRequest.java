@@ -24,6 +24,6 @@ public class ProductRequest {
     @NotNull
     private Integer price;
 
-    private MultipartFile picture;
+    private MultipartFile image;
 
 }

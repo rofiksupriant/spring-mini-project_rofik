@@ -15,8 +15,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "products")
-@SQLDelete(sql = "UPDATE TABLE products SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = false")
+@SQLDelete(sql = "UPDATE products SET deleted = true WHERE id = ?")
+@FilterDef(name = "deletedProductFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedProductFilter", condition = "deleted = :isDeleted")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,8 +40,8 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Integer price;
 
-    @Column(name = "picture")
-    private String picture;
+    @Column(name = "image")
+    private String image;
 
     @Column(name = "deleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean deleted = Boolean.FALSE;

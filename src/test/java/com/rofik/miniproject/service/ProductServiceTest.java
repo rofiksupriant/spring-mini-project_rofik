@@ -12,9 +12,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +56,7 @@ class ProductServiceTest {
         );
         when(productRepository.findAll()).thenReturn(productList);
 
-        ResponseEntity responseEntity = productService.getAll();
+        ResponseEntity responseEntity = productService.getAll(false);
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
         List<ProductResponse> data = (List<ProductResponse>) apiResponse.getData();
 
@@ -78,7 +76,7 @@ class ProductServiceTest {
         );
         when(productRepository.findByDeleted(anyBoolean())).thenReturn(productList);
 
-        ResponseEntity responseEntity = productService.getAllDeleted();
+        ResponseEntity responseEntity = productService.getAll(true);
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
         List<ProductResponse> data = (List<ProductResponse>) apiResponse.getData();
 

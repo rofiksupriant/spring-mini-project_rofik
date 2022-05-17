@@ -28,13 +28,13 @@ public class ProductResponse {
     private Integer price;
 
     @Getter(AccessLevel.NONE)
-    private Resource picture;
+    private Resource image;
 
     @Transient
     @SneakyThrows
-    public String getPicture() {
-        if (this.picture.exists()) {
-            byte[] fileContent = FileUtils.readFileToByteArray(this.picture.getFile());
+    public String getImage() {
+        if (this.image.exists()) {
+            byte[] fileContent = FileUtils.readFileToByteArray(this.image.getFile());
             return Base64.getEncoder().encodeToString(fileContent);
         }
 

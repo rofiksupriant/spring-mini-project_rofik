@@ -22,12 +22,12 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<Object> getAll() {
-        return productService.getAll();
+        return productService.getAll(false);
     }
 
     @GetMapping(value = "/deleted")
     public ResponseEntity<Object> getAllDeleted() {
-        return productService.getAllDeleted();
+        return productService.getAll(true);
     }
 
     @GetMapping(path = "{id}")
