@@ -8,9 +8,9 @@ import com.rofik.miniproject.domain.dto.request.UserRequest;
 import com.rofik.miniproject.domain.dto.response.UserResponse;
 import com.rofik.miniproject.repository.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -25,10 +25,10 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class UserServiceTest {
-    @Mock
+    @MockBean
     private UserRepository userRepository;
 
-    @InjectMocks
+    @Autowired
     private UserService userService;
 
     @Test

@@ -9,9 +9,9 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -26,14 +26,13 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class TableServiceTest {
-    @Mock
+    @MockBean
     private TableRepository tableRepository;
 
-    @InjectMocks
+    @Autowired
     private TableService tableService;
 
     @Test
-    @Order(1)
     void createOneSuccess() {
         Table table = Table.builder().id(1L).uuid("74706156-db51-492e-8e57-abcf134c0098").number(1).build();
         when(tableRepository.saveAndFlush(any())).thenReturn(table);
@@ -50,7 +49,6 @@ class TableServiceTest {
     }
 
     @Test
-    @Order(2)
     void createOneBadRequest() {
         Table table = Table.builder().id(1L).uuid("74706156-db51-492e-8e57-abcf134c0098").number(1).build();
         when(tableRepository.findByNumber(any())).thenReturn(Optional.of(table));
@@ -66,7 +64,6 @@ class TableServiceTest {
     }
 
     @Test
-    @Order(3)
     void getAll() {
         List<Table> tableList = Arrays.asList(
                 Table.builder().id(1L).uuid("74706156-db51-492e-8e57-abcf134c0098").number(1).build(),
@@ -87,7 +84,6 @@ class TableServiceTest {
     }
 
     @Test
-    @Order(4)
     void getOneByIdSuccess() {
         Table table = Table.builder().id(1L).uuid("74706156-db51-492e-8e57-abcf134c0098").number(1).build();
         when(tableRepository.findById(any())).thenReturn(Optional.of(table));
@@ -102,7 +98,6 @@ class TableServiceTest {
     }
 
     @Test
-    @Order(5)
     void getOneByIdNotFound() {
         when(tableRepository.findById(any())).thenReturn(Optional.ofNullable(null));
 
@@ -114,7 +109,6 @@ class TableServiceTest {
     }
 
     @Test
-    @Order(6)
     void getOneByUuid() {
         Table table = Table.builder().id(1L).uuid("74706156-db51-492e-8e57-abcf134c0098").number(1).build();
         when(tableRepository.findByUuid(any())).thenReturn(Optional.ofNullable(table));
@@ -129,7 +123,6 @@ class TableServiceTest {
     }
 
     @Test
-    @Order(7)
     void getOneByUuidNotFound() {
         when(tableRepository.findByUuid(any())).thenReturn(Optional.ofNullable(null));
 
@@ -141,7 +134,6 @@ class TableServiceTest {
     }
 
     @Test
-    @Order(8)
     void updateOneSuccess() {
         Table table = Table.builder().id(1L).uuid("74706156-db51-492e-8e57-abcf134c0098").number(1).build();
         when(tableRepository.findById(any())).thenReturn(Optional.of(table));
@@ -161,7 +153,6 @@ class TableServiceTest {
     }
 
     @Test
-    @Order(9)
     void updateOneNotFound() {
         when(tableRepository.findById(any())).thenReturn(Optional.ofNullable(null));
 
@@ -175,7 +166,6 @@ class TableServiceTest {
     }
 
     @Test
-    @Order(10)
     void updateOneBadRequest() {
         Table table = Table.builder().id(1L).uuid("74706156-db51-492e-8e57-abcf134c0098").number(1).build();
         when(tableRepository.findById(any())).thenReturn(Optional.of(table));
@@ -191,7 +181,6 @@ class TableServiceTest {
     }
 
     @Test
-    @Order(11)
     void deleteOneSuccess() {
         Table table = Table.builder().id(1L).uuid("74706156-db51-492e-8e57-abcf134c0098").number(1).build();
         when(tableRepository.findById(any())).thenReturn(Optional.of(table));
@@ -204,7 +193,6 @@ class TableServiceTest {
     }
 
     @Test
-    @Order(12)
     void deleteOneNotFound() {
         when(tableRepository.findById(any())).thenReturn(Optional.ofNullable(null));
 

@@ -10,9 +10,9 @@ import com.rofik.miniproject.repository.CategoryRepository;
 import com.rofik.miniproject.repository.ProductCategoryRepository;
 import com.rofik.miniproject.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -22,20 +22,20 @@ import java.util.Optional;
 
 import static com.rofik.miniproject.constant.ResponseContant.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class ProductCategoryCategoryServiceTest {
-    @Mock
+class ProductCategoryServiceTest {
+    @MockBean
     private ProductCategoryRepository productCategoryRepository;
-    @Mock
+    @MockBean
     private ProductRepository productRepository;
-    @Mock
+    @MockBean
     private CategoryRepository categoryRepository;
 
-    @InjectMocks
+    @Autowired
     private ProductCategoryService productCategoryService;
 
     @Test
@@ -57,7 +57,6 @@ class ProductCategoryCategoryServiceTest {
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(HttpStatus.OK, apiResponse.getStatus());
         assertEquals(PRODUCT_CATEGORY_CREATED, apiResponse.getMessage());
     }
 
