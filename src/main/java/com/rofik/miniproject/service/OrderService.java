@@ -67,6 +67,7 @@ public class OrderService {
                         .product(product)
                         .image(product.getImage())
                         .price(product.getPrice())
+                        .subtotal(product.getPrice() * productOrderRequest.getQuantity())
                         .quantity(productOrderRequest.getQuantity())
                         .build());
             }
@@ -83,82 +84,4 @@ public class OrderService {
             throw e;
         }
     }
-
-//    public ResponseEntity<Object> getAll() {
-//        try {
-//            log.info("Get all order");
-//            List<Category> orderList = orderRepository.findAll();
-//
-//            List<CategoryResponse> result = new ArrayList<>();
-//            orderList.forEach(order -> result.add(
-//                    CategoryResponse.builder()
-//                            .id(order.getId())
-//                            .name(order.getName())
-//                            .description(order.getDescription())
-//                            .build()
-//            ));
-//
-//            return ResponseUtil.build(CATEGORY_GET_ALL, HttpStatus.OK, result);
-//        } catch (Exception e) {
-//            log.error("Error get all order: {}", e.getLocalizedMessage());
-//            throw e;
-//        }
-//    }
-//
-//    public ResponseEntity<Object> getOneById(Long id) {
-//        try {
-//            Optional<Category> orderOptional = orderRepository.findById(id);
-//
-//            if (orderOptional.isEmpty()) return ResponseUtil.build(CATEGORY_NOT_FOUND, HttpStatus.NOT_FOUND);
-//
-//            Category order = orderOptional.get();
-//            CategoryResponse response = new CategoryResponse();
-//            BeanUtils.copyProperties(order, response);
-//
-//            return ResponseUtil.build(CATEGORY_GET_BY_ID, HttpStatus.OK, response);
-//        } catch (Exception e) {
-//            log.error("Error get order by id: {}", e.getLocalizedMessage());
-//            throw e;
-//        }
-//    }
-//
-//    public ResponseEntity<Object> updateOne(Long id, CategoryRequest request) {
-//        try {
-//            log.info("Update order {}", id);
-//
-//            Optional<Category> orderOptional = orderRepository.findById(id);
-//            if (orderOptional.isEmpty()) return ResponseUtil.build(CATEGORY_NOT_FOUND, HttpStatus.NOT_FOUND);
-//
-//            Optional<Category> orderOptionalByName = orderRepository.findByNameAndIdNot(request.getName(), id);
-//            if (orderOptionalByName.isPresent())
-//                return ResponseUtil.build(CATEGORY_EXIST, HttpStatus.BAD_REQUEST);
-//
-//            Category order = orderOptional.get();
-//            BeanUtils.copyProperties(request, order);
-//            order = orderRepository.saveAndFlush(order);
-//
-//            CategoryResponse response = new CategoryResponse();
-//            BeanUtils.copyProperties(order, response);
-//            return ResponseUtil.build(CATEGORY_UPDATED, HttpStatus.OK, response);
-//        } catch (Exception e) {
-//            log.error("Error update order with id {}: {}", id, e.getLocalizedMessage());
-//            throw e;
-//        }
-//    }
-//
-//    public ResponseEntity<Object> deleteOne(Long id) {
-//        try {
-//            log.info("Delete order with id {}", id);
-//
-//            Optional<Category> orderOptional = orderRepository.findById(id);
-//            if (orderOptional.isEmpty()) return ResponseUtil.build(CATEGORY_NOT_FOUND, HttpStatus.NOT_FOUND);
-//
-//            orderRepository.deleteById(id);
-//            return ResponseUtil.build(CATEGORY_DELETED, HttpStatus.OK);
-//        } catch (Exception e) {
-//            log.error("Error delete order with id {}: {}", id, e.getLocalizedMessage());
-//            throw e;
-//        }
-//
-//    }
 }
