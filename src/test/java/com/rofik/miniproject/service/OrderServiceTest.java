@@ -75,6 +75,63 @@ class OrderServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "d85d70c9-ce24-41a0-8cff-8efe4090f228", roles = {"CUSTOMER"})
+    void createOnePaymentNotFound() {
+        Product product = Product.builder().id(1L).name("Jus Jambu").price(10000).build();
+
+        when(paymentRepository.findById(anyLong())).thenReturn(Optional.ofNullable(null));
+        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
+        when(orderDetailRepository.saveAll(any())).thenReturn(new ArrayList<>());
+        when(orderRepository.save(any())).thenReturn(Order.builder().id(1L).build());
+        when(tableRepository.findByUuid(any())).thenReturn(Optional.of(
+                Table.builder().uuid("d85d70c9-ce24-41a0-8cff-8efe4090f228").number(1).build()));
+
+        OrderRequest orderRequest = OrderRequest.builder()
+                .paymentId(1L)
+                .products(Arrays.asList(
+                        ProductOrderRequest.builder().id(1L).quantity(1).build(),
+                        ProductOrderRequest.builder().id(2L).quantity(1).build()
+                ))
+                .build();
+
+        ResponseEntity responseEntity = orderService.createOne(orderRequest);
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals(PAYMENT_NOT_FOUND, apiResponse.getMessage());
+
+    }
+
+    @Test
+    @WithMockUser(username = "d85d70c9-ce24-41a0-8cff-8efe4090f228", roles = {"CUSTOMER"})
+    void createOneProductNotFound() {
+        Payment payment = Payment.builder().id(1L).name("CASH").build();
+        Product product = Product.builder().id(1L).name("Jus Jambu").price(10000).build();
+
+        when(paymentRepository.findById(anyLong())).thenReturn(Optional.of(payment));
+        when(productRepository.findById(anyLong())).thenReturn(Optional.ofNullable(null));
+        when(orderDetailRepository.saveAll(any())).thenReturn(new ArrayList<>());
+        when(orderRepository.save(any())).thenReturn(Order.builder().id(1L).build());
+        when(tableRepository.findByUuid(any())).thenReturn(Optional.of(
+                Table.builder().uuid("d85d70c9-ce24-41a0-8cff-8efe4090f228").number(1).build()));
+
+        OrderRequest orderRequest = OrderRequest.builder()
+                .paymentId(1L)
+                .products(Arrays.asList(
+                        ProductOrderRequest.builder().id(1L).quantity(1).build(),
+                        ProductOrderRequest.builder().id(2L).quantity(1).build()
+                ))
+                .build();
+
+        ResponseEntity responseEntity = orderService.createOne(orderRequest);
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals(PRODUCT_NOT_FOUND, apiResponse.getMessage());
+
+    }
+
+    @Test
     void createOneError() {
         try {
             OrderRequest orderRequest = OrderRequest.builder()
@@ -118,7 +175,27 @@ class OrderServiceTest {
     }
 
     @Test
-    void serveOrderError() {
+    void updateStatusOrderNotFound() {
+        Table table = Table.builder().id(1L).number(1).build();
+        Payment payment = Payment.builder().id(1L).name("CASH").build();
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.ofNullable(null));
+        when(orderRepository.saveAndFlush(any())).thenReturn(
+                Order.builder().id(1L).status(OrderStatus.PAID).table(table).payment(payment).build()
+        );
+        when(paymentRepository.findById(anyLong())).thenReturn(Optional.of(
+                payment
+        ));
+
+        ResponseEntity responseEntity = orderService.updateStatus(1L, OrderStatus.PAID);
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals(ORDER_NOT_FOUND, apiResponse.getMessage());
+    }
+
+    @Test
+    void updateStatusOrderError() {
         doThrow(JpaObjectRetrievalFailureException.class).when(orderRepository).findById(anyLong());
 
         try {
@@ -169,11 +246,22 @@ class OrderServiceTest {
     }
 
     @Test
+    void getOneOrderNotFound() {
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.ofNullable(null));
+
+        ResponseEntity<Object> responseEntity = orderService.getOne(1L);
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals(ORDER_NOT_FOUND, apiResponse.getMessage());
+    }
+
+    @Test
     void getOneError() {
         doThrow(JpaObjectRetrievalFailureException.class).when(orderRepository).findById(anyLong());
 
         try {
-            orderService.getAll();
+            orderService.getOne(1L);
         } catch (Exception e) {
         }
     }
