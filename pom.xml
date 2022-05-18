@@ -86,6 +86,12 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>4.5.1</version>
+            <scope>test</scope>
+        </dependency>
 
         <!--START logging -->
         <dependency>
@@ -176,6 +182,7 @@
                         <exclude>**/controller/**/*.class</exclude>
                         <exclude>**/exception/*.class</exclude>
                         <exclude>**/security/**Config.class</exclude>
+                        <exclude>**/util/File**.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>

@@ -56,6 +56,7 @@ public class ProductService {
                     fileAsResource = FileDownloadUtil.getFileAsResource(product.getImage());
                 } catch (IOException e) {
                     log.error("error load image file: {}", e.getLocalizedMessage());
+                    throw new RuntimeException(e);
                 }
             }
 
@@ -70,6 +71,7 @@ public class ProductService {
         }
     }
 
+    @SneakyThrows
     public ResponseEntity<Object> getAll(boolean isDeleted) {
         try {
             log.info("Get all product where deleted {}", isDeleted);
@@ -86,7 +88,8 @@ public class ProductService {
                     try {
                         fileAsResource = FileDownloadUtil.getFileAsResource(product.getImage());
                     } catch (IOException e) {
-                        log.error("error load image file: {}", e.getLocalizedMessage());
+                        log.error(e.getLocalizedMessage());
+                        throw new RuntimeException(e);
                     }
                 }
                 result.add(
@@ -121,6 +124,7 @@ public class ProductService {
                     fileAsResource = FileDownloadUtil.getFileAsResource(product.getImage());
                 } catch (IOException e) {
                     log.error("error load image file: {}", e.getLocalizedMessage());
+                    throw new RuntimeException(e);
                 }
             }
             ProductResponse response = ProductResponse.builder()
@@ -158,6 +162,15 @@ public class ProductService {
 
             ProductResponse response = new ProductResponse();
             BeanUtils.copyProperties(product, response);
+            Resource fileAsResource = null;
+            if (product.getImage() != null) {
+                try {
+                    fileAsResource = FileDownloadUtil.getFileAsResource(product.getImage());
+                } catch (IOException e) {
+                    log.error("error load image file: {}", e.getLocalizedMessage());
+                    throw new RuntimeException(e);
+                }
+            }
             return ResponseUtil.build(PRODUCT_UPDATED, HttpStatus.OK, response);
         } catch (Exception e) {
             log.error("Error update product with id {}: {}", id, e.getLocalizedMessage());

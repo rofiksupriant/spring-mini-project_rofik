@@ -11,8 +11,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileUploadUtil {
-    private FileUploadUtil() {
-    }
 
     private static Path basePath = Paths.get("/kampus-merdeka/mini-project/files").toAbsolutePath();
 
