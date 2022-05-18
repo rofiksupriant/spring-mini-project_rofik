@@ -1,6 +1,7 @@
 package com.rofik.miniproject.service;
 
 import com.rofik.miniproject.domain.common.ApiResponse;
+import com.rofik.miniproject.domain.common.OrderStatus;
 import com.rofik.miniproject.domain.dao.Order;
 import com.rofik.miniproject.domain.dao.Payment;
 import com.rofik.miniproject.domain.dao.Product;
@@ -14,17 +15,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static com.rofik.miniproject.constant.ResponseContant.ORDER_CREATED;
+import static com.rofik.miniproject.constant.ResponseContant.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -88,6 +91,89 @@ class OrderServiceTest {
             assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
             assertEquals(ORDER_CREATED, apiResponse.getMessage());
             fail();
+        } catch (Exception e) {
+        }
+    }
+
+    @Test
+    void updateStatusOrderSuccess() {
+        Table table = Table.builder().id(1L).number(1).build();
+        Payment payment = Payment.builder().id(1L).name("CASH").build();
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(
+                Order.builder().id(1L).status(OrderStatus.ORDERED).table(table).payment(payment).build()
+        ));
+        when(orderRepository.saveAndFlush(any())).thenReturn(
+                Order.builder().id(1L).status(OrderStatus.PAID).table(table).payment(payment).build()
+        );
+        when(paymentRepository.findById(anyLong())).thenReturn(Optional.of(
+                payment
+        ));
+
+        ResponseEntity responseEntity = orderService.updateStatus(1L, OrderStatus.PAID);
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(ORDER_UPDATED, apiResponse.getMessage());
+    }
+
+    @Test
+    void serveOrderError() {
+        doThrow(JpaObjectRetrievalFailureException.class).when(orderRepository).findById(anyLong());
+
+        try {
+            ResponseEntity responseEntity = orderService.updateStatus(1L, OrderStatus.PAID);
+        } catch (Exception e) {
+        }
+    }
+
+    @Test
+    void getAllSuccess() {
+        Table table = Table.builder().id(1L).number(1).build();
+        Payment payment = Payment.builder().id(1L).name("CASH").build();
+
+        when(orderRepository.findAll()).thenReturn(Arrays.asList(
+                Order.builder().id(1L).table(table).payment(payment).status(OrderStatus.ORDERED).build()
+        ));
+
+        ResponseEntity<Object> responseEntity = orderService.getAll();
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(ORDER_GET_ALL, apiResponse.getMessage());
+    }
+
+    @Test
+    void getAllError() {
+        doThrow(JpaObjectRetrievalFailureException.class).when(orderRepository).findAll();
+
+        try {
+            orderService.getAll();
+        } catch (Exception e) {
+        }
+    }
+
+    @Test
+    void getOneSuccess() {
+        Table table = Table.builder().id(1L).number(1).build();
+        Payment payment = Payment.builder().id(1L).name("CASH").build();
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(
+                Order.builder().id(1L).table(table).payment(payment).status(OrderStatus.ORDERED).build()));
+
+        ResponseEntity<Object> responseEntity = orderService.getOne(1L);
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(ORDER_GET_BY_ID, apiResponse.getMessage());
+    }
+
+    @Test
+    void getOneError() {
+        doThrow(JpaObjectRetrievalFailureException.class).when(orderRepository).findById(anyLong());
+
+        try {
+            orderService.getAll();
         } catch (Exception e) {
         }
     }
