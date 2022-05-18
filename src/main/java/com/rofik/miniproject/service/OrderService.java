@@ -4,6 +4,9 @@ import com.rofik.miniproject.domain.common.OrderStatus;
 import com.rofik.miniproject.domain.dao.*;
 import com.rofik.miniproject.domain.dto.request.OrderRequest;
 import com.rofik.miniproject.domain.dto.request.ProductOrderRequest;
+import com.rofik.miniproject.domain.dto.response.OrderResponse;
+import com.rofik.miniproject.domain.dto.response.PaymentResponse;
+import com.rofik.miniproject.domain.dto.response.TableResponse;
 import com.rofik.miniproject.repository.OrderDetailRepository;
 import com.rofik.miniproject.repository.OrderRepository;
 import com.rofik.miniproject.repository.PaymentRepository;
@@ -35,6 +38,38 @@ public class OrderService {
     private ProductRepository productRepository;
     @Autowired
     private AuthService authService;
+
+    public ResponseEntity<Object> getAll() {
+        try {
+            Iterable<Order> orderIterable = orderRepository.findAll();
+
+            List<OrderResponse> orderResponseList = new ArrayList<>();
+
+            orderIterable.forEach(order -> {
+                orderResponseList.add(
+                        OrderResponse.builder()
+                                .id(order.getId())
+                                .totalQty(order.getTotalQty())
+                                .totalPrice(order.getTotalPrice())
+                                .payment(PaymentResponse.builder()
+                                        .id(order.getPayment().getId())
+                                        .name(order.getPayment().getName())
+                                        .build())
+                                .table(TableResponse.builder()
+                                        .id(order.getTable().getId())
+                                        .number(order.getTable().getNumber())
+                                        .build())
+                                .status(order.getStatus())
+                                .build()
+                );
+            });
+
+            return ResponseUtil.build(ORDER_GET_ALL, HttpStatus.OK, orderResponseList);
+        } catch (Exception e) {
+            log.error("Error get all orders : {}", e.getLocalizedMessage());
+            throw e;
+        }
+    }
 
     @Transactional
     public ResponseEntity<Object> createOne(OrderRequest request) {
@@ -78,9 +113,83 @@ public class OrderService {
             orderRepository.save(order);
             orderDetailRepository.saveAll(orderDetailList);
 
-            return ResponseUtil.build(ORDER_CREATED, HttpStatus.OK);
+            OrderResponse orderResponse = OrderResponse.builder()
+                    .id(order.getId())
+                    .totalQty(order.getTotalQty())
+                    .totalPrice(order.getTotalPrice())
+                    .payment(PaymentResponse.builder()
+                            .id(payment.getId())
+                            .name(payment.getName())
+                            .build())
+                    .table(TableResponse.builder()
+                            .id(order.getTable().getId())
+                            .number(order.getTable().getNumber())
+                            .build())
+                    .status(order.getStatus())
+                    .build();
+
+            return ResponseUtil.build(ORDER_CREATED, HttpStatus.OK, orderResponse);
         } catch (Exception e) {
             log.error("Error create new order: {}", e.getLocalizedMessage());
+            throw e;
+        }
+    }
+
+    public ResponseEntity<Object> updateStatus(Long orderId, OrderStatus orderStatus) {
+        try {
+            Optional<Order> orderOptional = orderRepository.findById(orderId);
+            if (!orderOptional.isPresent()) return ResponseUtil.build(ORDER_NOT_FOUND, HttpStatus.NOT_FOUND);
+
+            Order order = orderOptional.get();
+            order.setStatus(orderStatus);
+            order = orderRepository.saveAndFlush(order);
+
+            OrderResponse orderResponse = OrderResponse.builder()
+                    .id(order.getId())
+                    .totalQty(order.getTotalQty())
+                    .totalPrice(order.getTotalPrice())
+                    .payment(PaymentResponse.builder()
+                            .id(order.getPayment().getId())
+                            .name(order.getPayment().getName())
+                            .build())
+                    .table(TableResponse.builder()
+                            .id(order.getTable().getId())
+                            .number(order.getTable().getNumber())
+                            .build())
+                    .status(order.getStatus())
+                    .build();
+
+            return ResponseUtil.build(ORDER_UPDATED, HttpStatus.OK, orderResponse);
+        } catch (Exception e) {
+            log.error("error serve order: {}", e.getLocalizedMessage());
+            throw e;
+        }
+    }
+
+    public ResponseEntity<Object> getOne(Long id) {
+        try {
+            Optional<Order> orderOptional = orderRepository.findById(id);
+            if (!orderOptional.isPresent()) return ResponseUtil.build(ORDER_NOT_FOUND, HttpStatus.NOT_FOUND);
+
+            Order order = orderOptional.get();
+            OrderResponse response = OrderResponse.builder()
+                    .id(order.getId())
+                    .totalQty(order.getTotalQty())
+                    .totalPrice(order.getTotalPrice())
+                    .payment(PaymentResponse.builder()
+                            .id(order.getPayment().getId())
+                            .name(order.getPayment().getName())
+                            .build())
+                    .table(TableResponse.builder()
+                            .id(order.getTable().getId())
+                            .number(order.getTable().getNumber())
+                            .build())
+                    .status(order.getStatus())
+                    .build();
+
+            return ResponseUtil.build(ORDER_GET_BY_ID, HttpStatus.OK, response);
+        } catch (Exception e) {
+            log.error("Error get all orders : {}", e.getLocalizedMessage());
             throw e;
         }
     }

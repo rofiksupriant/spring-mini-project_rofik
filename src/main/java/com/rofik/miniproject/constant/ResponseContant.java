@@ -45,5 +45,9 @@ public class ResponseContant {
     public static final String PRODUCT_CATEGORY_GET_ALL = "list product category";
     public static final String PRODUCT_CATEGORY_GET_BY_ID = "product category by id";
     public static final String ORDER_CREATED = "order created successfully";
+    public static final String ORDER_NOT_FOUND = "order not found";
+    public static final String ORDER_UPDATED = "order updated successfully";
+    public static final String ORDER_GET_ALL = "list order";
+    public static final String ORDER_GET_BY_ID = "get order by id";
 
 }
